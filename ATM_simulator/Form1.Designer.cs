@@ -158,9 +158,8 @@
             this.NTD_btn.Name = "NTD_btn";
             this.NTD_btn.Size = new System.Drawing.Size(75, 23);
             this.NTD_btn.TabIndex = 11;
-            this.NTD_btn.Text = "新台幣";
+            this.NTD_btn.Text = "NTD";
             this.NTD_btn.UseVisualStyleBackColor = true;
-            this.NTD_btn.Click += new System.EventHandler(this.NTD_btn_Click);
             // 
             // USD_btn
             // 
@@ -168,9 +167,8 @@
             this.USD_btn.Name = "USD_btn";
             this.USD_btn.Size = new System.Drawing.Size(75, 23);
             this.USD_btn.TabIndex = 12;
-            this.USD_btn.Text = "美金";
+            this.USD_btn.Text = "USD";
             this.USD_btn.UseVisualStyleBackColor = true;
-            this.USD_btn.Click += new System.EventHandler(this.USD_btn_Click);
             // 
             // money_textbox
             // 

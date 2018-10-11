@@ -16,20 +16,8 @@ namespace ATM_simulator
         {
             InitializeComponent();
 
-            //// initialize control_list
-            //control_list = new List<List<Control>>();
-
-            //control_list.Add(new List<Control>() { login_label, login_textbox, login_btn });
-            //control_list.Add(new List<Control>() {
-            //    service_title, withdraw_btn, top_up_btn, check_balance_btn, check_history_btn, logout_btn
-            //});
-
-            control_list = new List<Control>() {
-                login_label, login_textbox, login_btn,
-                service_title, withdraw_btn, top_up_btn, check_balance_btn, check_history_btn, logout_btn,
-                money_label, money_textbox, NTD_btn, USD_btn,
-                history_textbox
-            };
+            NTD_btn.Click += money_btn_click;
+            USD_btn.Click += money_btn_click;
 
             // initialize status
             status = 1;
@@ -41,24 +29,9 @@ namespace ATM_simulator
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //foreach (List<Control> c_list in control_list)
-            //{
-            //    foreach (Control c in c_list)
-            //    {
-            //        c.Visible = false;
-            //    }
-            //}
-
-            //foreach (Control c in control_list[status])
-            //{
-            //    c.Visible = true;
-            //}
-
-            foreach (Control c in control_list)
-            {
+            foreach (Control c in Controls)
                 c.Visible = false;
-            }
-            
+
             switch (status)
             {
                 case 0:
@@ -164,20 +137,40 @@ namespace ATM_simulator
             Form1_Load(this, e);
         }
 
-        private void NTD_btn_Click(object sender, EventArgs e)
+        private void money_btn_click(object sender, EventArgs e)
         {
-            int NTD = 0;
+            string m_type = ((Button)sender).Text;
+
+            int m = 0, exchange_rate;
             try
             {
-                NTD = int.Parse(money_textbox.Text);
+                m = int.Parse(money_textbox.Text);
             }
             catch
             {
+
                 // unexpected situation
-                history += "unexpected situation in NTD_btn_Click\r\n";
+                history += "unexpected situation in parsing money in money_btn_click\r\n";
                 return;
             }
 
+            switch (m_type)
+            {
+                case "USD":
+                    exchange_rate = 3;
+                    break;
+                case "NTD":
+                    exchange_rate = 1;
+                    break;
+                default:
+                    // unexpected situation
+                    history += "unexpected situation in money_type in money_btn_click\r\n";
+                    return;
+            }
+
+            // change to NTD
+            int NTD = m * exchange_rate;
+            
             if (status == 3)
             {
                 // withdraw status
@@ -185,7 +178,7 @@ namespace ATM_simulator
                 {
                     // sufficient
                     money -= NTD;
-                    history += "[提款] " + NTD.ToString() + " NTD\r\n";
+                    history += "[提款] " + NTD.ToString() + " NTD (" + m.ToString() + " " + m_type + ")\r\n";
                     history += "[餘額] " + money.ToString() + " NTD\r\n";
                 }
             }
@@ -193,46 +186,7 @@ namespace ATM_simulator
             {
                 // top_up status
                 money += NTD;
-                history += "[存款] " + NTD.ToString() + " NTD\r\n";
-                history += "[餘額] " + money.ToString() + " NTD\r\n";
-            }
-
-            status = 1;
-            Form1_Load(this, e);
-        }
-
-        private void USD_btn_Click(object sender, EventArgs e)
-        {
-            int USD = 0;
-            try
-            {
-                USD = int.Parse(money_textbox.Text);
-            }
-            catch
-            {
-                // unexpected situation
-                history += "unexpected situation in NTD_btn_Click\r\n";
-                return;
-            }
-
-            int NTD = USD * exchange_rate;
-
-            if (status == 3)
-            {
-                // withdraw status
-                if (money >= NTD)
-                {
-                    // sufficient
-                    money -= NTD;
-                    history += "[提款] " + NTD.ToString() + " NTD (" + USD.ToString() + " USD)\r\n";
-                    history += "[餘額] " + money.ToString() + " NTD\r\n";
-                }
-            }
-            else if (status == 4)
-            {
-                // top_up status
-                money += NTD;
-                history += "[存款] " + NTD.ToString() + " NTD (" + USD.ToString() + " USD)\r\n";
+                history += "[存款] " + NTD.ToString() + " NTD (" + m.ToString() + " " + m_type + ")\r\n";
                 history += "[餘額] " + money.ToString() + " NTD\r\n";
             }
 
